@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+union Token {
+	// Members are public by default
+	char c;
+	int i;
+	double d;
+};
+enum class TokenType { Char, Int, Double };     // Enumerate allowed types
+
+struct TaggedToken {
+    Token token;
+    TokenType type;                         // "Tag" field to indicate which member is in use
+};
+
+int main() {
+	Token token;
+	token.c = 'Z';               // char member is in use
+	
+	cout << token.d << endl;    // Double member not in use - has undefined value
+
+    TaggedToken tk;
+	tk.type = TokenType::Char;              // char member is in use
+	tk.token.c = 'Z';
+	
+	// Check if safe to access double member
+	if (tk.type == TokenType::Double)
+		cout << tk.token.d << endl;
+	else
+		cout << "Double member not in use\n";
+}
